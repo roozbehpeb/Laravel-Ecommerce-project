@@ -11,11 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('roles_', function (Blueprint $table) {
+        Schema::create('product_categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('slug')->unique()->nullable();
             $table->text('description');
+            $table->text('image')->nullable();
             $table->tinyInteger('status')->default(0);
+            $table->tinyInteger('show_in_menu')->default(0);
+            $table->string('tage')->nullable();
+            $table->foreignId('parent_id')->constrained('product_categories')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -26,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('roles_');
+        Schema::dropIfExists('product_categories');
     }
 };
