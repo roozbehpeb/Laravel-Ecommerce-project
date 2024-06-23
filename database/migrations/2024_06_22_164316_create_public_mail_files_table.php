@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('menus', function (Blueprint $table) {
+        Schema::create('public_mail_files', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('url');
+            $table->foreignId('public_mail_id')->constrained('public_mail')->onUpdate('cascade')->onDelete('cascade');
+            $table->text('file_path');
+            $table->bigInteger('file_size');
+            $table->string('file_type');
             $table->tinyInteger('status')->default(0);
-            $table->foreignId('parent_id')->nullable()->constrained('menus')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('menus');
+        Schema::dropIfExists('public_mail_files');
     }
 };

@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('menus', function (Blueprint $table) {
+        Schema::create('amazing_sales', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('url');
+            $table->foreignId('product_id')->constrained('products')->onUpdate('cascade')->onDelete('cascade');
+            $table->integer('percentage');
             $table->tinyInteger('status')->default(0);
-            $table->foreignId('parent_id')->nullable()->constrained('menus')->nullable();
+            $table->timestamp('start_date')->useCurrent();
+            $table->timestamp('end_date')->useCurrent();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('menus');
+        Schema::dropIfExists('amazing_sales');
     }
 };

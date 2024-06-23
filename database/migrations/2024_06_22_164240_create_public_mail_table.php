@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('menus', function (Blueprint $table) {
+        Schema::create('public_mail', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('url');
+            $table->string('subject');
+            $table->text('body');
             $table->tinyInteger('status')->default(0);
-            $table->foreignId('parent_id')->nullable()->constrained('menus')->nullable();
+            $table->timestamp('published_at');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('menus');
+        Schema::dropIfExists('public_mail');
     }
 };

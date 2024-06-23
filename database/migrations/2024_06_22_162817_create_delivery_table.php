@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('menus', function (Blueprint $table) {
+        Schema::create('delivery', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('url');
+            $table->decimal('amount', 20, 3)->nullable();
+            $table->integer('delivery_time')->nullable();
+            $table->string('delivery_time_unit')->nullable();
             $table->tinyInteger('status')->default(0);
-            $table->foreignId('parent_id')->nullable()->constrained('menus')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('menus');
+        Schema::dropIfExists('delivery');
     }
 };

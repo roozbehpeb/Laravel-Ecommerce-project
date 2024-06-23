@@ -11,17 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('tickets', function (Blueprint $table) {
-            $table->foreignId('ticket_id')->constrained('tickets')->onUpdate('cascade')->onDelete('cascade');
+        Schema::create('cities', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->foreignId('province_id')->constrained('provinces')->onUpdate('cascade')->onDelete('cascade');
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
-
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('cities');
     }
 };
