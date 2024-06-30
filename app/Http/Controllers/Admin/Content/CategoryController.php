@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers\Admin\Content;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Models\Content\PostCategory;
+use App\Http\Requests\Admin\Content\PostCategoryRequest;
+
 
 class CategoryController extends Controller
 {
@@ -14,7 +18,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return view('admin.content.category.index');
+        $postcategories = PostCategory::orderBy('created_at', 'DESC')->simplepaginate(15);
+        return view('admin.content.category.index', compact('postcategories'));
     }
 
     /**
@@ -33,10 +38,25 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PostCategoryRequest $request)
     {
-        //
+        // Get all inputs from the request
+        $inputs = $request->all();
+
+        // Remove '_token' from the inputs array
+        $inputs = collect($inputs)->except('_token')->toArray();
+
+        // Modify or add any additional fields you need
+        $inputs['slug'] = str_replace(' ', '-', $inputs['name']) . '-' . Str::random(5);
+        $inputs['image'] = 'image';
+
+        // Create the PostCategory instance
+        $postCategory = PostCategory::create($inputs);
+
+        // Redirect to the appropriate route after creation
+        return redirect()->route('admin.content.category.index');
     }
+
 
     /**
      * Display the specified resource.
@@ -55,9 +75,9 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(PostCategory $PostCategory)
     {
-        //
+        return view('admin.content.category.edit', compact('PostCategory'));
     }
 
     /**
@@ -67,9 +87,18 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(PostCategoryRequest $request, PostCategory $PostCategory)
     {
-        //
+        // Get all inputs from the request
+        $inputs = $request->all();
+
+        $inputs['image'] = 'image';
+
+        // Update the PostCategory instance
+        $PostCategory->update($inputs);
+
+        // Redirect to the appropriate route after update
+        return redirect()->route('admin.content.category.index');
     }
 
     /**
@@ -78,8 +107,10 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(PostCategory $PostCategory)
     {
-        //
+
+        $result = $PostCategory->delete();
+        return redirect()->route('admin.content.category.index');
     }
 }

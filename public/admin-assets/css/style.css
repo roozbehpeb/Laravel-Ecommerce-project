@@ -34,3 +34,7 @@
 .bg-custom-blue {
     background: linear-gradient(to right, #01dbdf, #01a9ac);
 }
+
+.alert_required{
+    font-size: 11pt;
+}
