@@ -29,14 +29,15 @@
                 </section>
 
                 <section>
-                    <form action="{{ route('admin.content.category.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('admin.content.category.store') }}" method="POST" enctype="multipart/form-data"
+                        id="form">
                         @csrf
                         <section class="row">
                             <section class="col-12 col-md-3 my-1">
                                 <div class="form-group">
                                     <label for="name">نام دسته</label>
-                                    <input type="text" class="form-control form-control-sm" name="name"
-                                        id="name" value="{{ old('name') }}">
+                                    <input type="text" class="form-control form-control-sm" name="name" id="name"
+                                        value="{{ old('name') }}">
                                 </div>
                                 <span class=" p-1">
                                     @error('name')
@@ -52,10 +53,12 @@
 
 
                             <section class="col-12 col-md-3 my-2">
-                                <div class="form-group">
-                                    <label for="tags">تگ ها</label>
-                                    <input type="text" class="form-control form-control-sm" name="tags"
-                                        id="tags" value="{{ old('tags') }}">
+                                <label for="tags">تگ ها</label>
+                                <input type="hidden" class="form-control form-control-sm" name="tags" id="tags"
+                                    value="{{ old('tags') }}">
+
+                                <select id="select_tags" class="slect2 form-control form-control-sm " multiple>
+                                </select>
                                 </div>
                                 <span class=" p-1">
                                     @error('tags')
@@ -72,8 +75,10 @@
                                 <div class="form-group">
                                     <label for="status">وضعیت</label>
                                     <select name="status" id="stasus" class="form-control form-control-sm">
-                                        <option  value="1" @if(old('status')==1) selected @endif>فعال</option>
-                                        <option  value="0" @if(old('status')==0) selected @endif>غیر فعال </option>
+                                        <option value="1" @if (old('status') == 1) selected @endif>فعال
+                                        </option>
+                                        <option value="0" @if (old('status') == 0) selected @endif>غیر فعال
+                                        </option>
                                     </select>
                                 </div>
                                 <span class=" p-1">
@@ -106,7 +111,7 @@
                             <section class="col-12 col-md-6 my-2">
                                 <div class="form-group">
                                     <label for="">توضیحات</label>
-                                    <textarea name="description" id="description" class="form-control form-control-sm" rows="6" >{{ old('description') }}</textarea>
+                                    <textarea name="description" id="description" class="form-control form-control-sm" rows="6">{{ old('description') }}</textarea>
                                     <span class=" p-1 my-2">
                                         @error('description')
                                             <span class="alert_required bg-danger text-white  rounded " role="alert">
@@ -128,9 +133,41 @@
         </section>
     </section>
 @endsection
+
+
 @section('script')
     <script src="{{ asset('admin-assets/ckeditor/ckeditor.js') }}"></script>
     <script>
         CKEDITOR.replace('description');
+    </script>
+
+
+    <script>
+        $(document).ready(function () {
+            var tags_input = $('#tags');
+            var select_tags = $('#select_tags');
+            var default_tags = tags_input.val();
+            var default_data = null;
+
+            if(tags_input.val() !== null && tags_input.val().length > 0)
+            {
+                default_data = default_tags.split(',');
+            }
+
+            select_tags.select2({
+                placeholder : 'لطفا تگ های خود را وارد نمایید',
+                tags: true,
+                data: default_data
+            });
+            select_tags.children('option').attr('selected', true).trigger('change');
+
+
+            $('#form').submit(function ( event ){
+                if(select_tags.val() !== null && select_tags.val().length > 0){
+                    var selectedSource = select_tags.val().join(',');
+                    tags_input.val(selectedSource)
+                }
+            })
+        })
     </script>
 @endsection

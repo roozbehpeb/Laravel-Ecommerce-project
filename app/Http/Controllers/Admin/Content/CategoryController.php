@@ -40,6 +40,7 @@ class CategoryController extends Controller
      */
     public function store(PostCategoryRequest $request)
     {
+
         // Get all inputs from the request
         $inputs = $request->all();
 
