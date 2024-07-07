@@ -54,8 +54,10 @@ class CategoryController extends Controller
         // Create the PostCategory instance
         $postCategory = PostCategory::create($inputs);
 
-        // Redirect to the appropriate route after creation
-        return redirect()->route('admin.content.category.index');
+        //Redirect to the appropriate route after creation
+        //return redirect()->route('admin.content.category.index')->with('swal-success', 'دسته بندی جدید شما با موفقیت ثبت شد')->with('toast-success', 'دسته بندی جدید با موفقیت ثبت شد')->with('alert-section-success', 'دسته بندی جدید با موفقیت ثبت شد');
+
+        return redirect()->route('admin.content.category.index')->with('toast-success', 'دسته بندی جدید با موفقیت ثبت شد');
     }
 
 
@@ -99,7 +101,7 @@ class CategoryController extends Controller
         $PostCategory->update($inputs);
 
         // Redirect to the appropriate route after update
-        return redirect()->route('admin.content.category.index');
+        return redirect()->route('admin.content.category.index')->with('swal-success', 'دسته بندی با موفقیت ویرایش شد');
     }
 
     /**
@@ -112,6 +114,27 @@ class CategoryController extends Controller
     {
 
         $result = $PostCategory->delete();
-        return redirect()->route('admin.content.category.index');
+        return redirect()->route('admin.content.category.index')->with('swal-success', 'دسته بندی شما با موفقیت حذف شد');
+    }
+
+
+
+
+
+
+    public function status(PostCategory $PostCategory)
+    {
+
+        $PostCategory->status = $PostCategory->status == 0 ? 1 : 0;
+        $result = $PostCategory->save();
+        if ($result) {
+            if ($PostCategory->status == 0) {
+                return response()->json(['status' => true, 'checked' => false]);
+            } else {
+                return response()->json(['status' => true, 'checked' => true]);
+            }
+        } else {
+            return response()->json(['status' => false]);
+        }
     }
 }

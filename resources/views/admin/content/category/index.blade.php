@@ -23,6 +23,8 @@
                     </h5>
                 </section>
 
+                @include('admin.alerts.alert-section.success')
+
                 <section class="d-flex justify-content-between align-items-center mt-4 mb-3 border-bottom pb-2">
                     <a href="{{ route('admin.content.category.create') }}" class="btn btn-info btn-sm">ایجاد دسته بندی</a>
                     <div class="max-width-16-rem">
@@ -54,10 +56,14 @@
                                     <td><img src="{{ asset($postcategory->image) }}" alt="" width="50px"
                                             height="50px"></td>
                                     <td>{{ $postcategory->tags }}</td>
-                                    <td><label for=""><input type="checkbox"
-                                                @if ($postcategory->status === 1) checked @endif>
+                                    <td>
+                                        <label for="{{ $postcategory->id }}"> <input id="{{ $postcategory->id }}"
+                                                onchange="changeStatus({{ $postcategory->id }})"
+                                                data-url="{{ route('admin.content.category.status', $postcategory->id) }}"
+                                                type="checkbox" @if ($postcategory->status === 1) checked @endif>
                                         </label>
                                     </td>
+
                                     <td class="width-16-rem text-left">
                                         <a href="{{ route('admin.content.category.edit', $postcategory->id) }}"
                                             class="btn btn-primary btn-sm"><i class="fa fa-edit"></i>
@@ -66,21 +72,101 @@
                                             method="POST" class="d-inline ">
                                             @csrf
                                             {{ method_field('DELETE') }}
-                                            <button class="btn btn-danger btn-sm" type="submit">
+                                            <button class="btn btn-danger delete btn-sm" type="submit">
                                                 <i class="fa fa-trash-alt"></i>
                                                 حذف
                                             </button>
                                         </form>
-
-
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
                 </section>
-
             </section>
         </section>
     </section>
+@endsection
+
+
+@section('script')
+    <script type="text/javascript">
+        function changeStatus(id) {
+            var element = $("#" + id)
+            var url = element.attr('data-url')
+            var elementValue = !element.prop('checked');
+
+            $.ajax({
+                url: url,
+                type: "GET",
+                success: function(response) {
+                    if (response.status) {
+                        if (response.checked) {
+                            element.prop('checked', true);
+                            successToast_Active('دسته بندی با موفقیت فعال شد')
+                        } else {
+                            element.prop('checked', false);
+                            successToast_Deactive('دسته بندی با موفقیت غیر فعال شد')
+                        }
+                    } else {
+                        element.prop('checked', elementValue);
+                        errorToast('هنگام ویرایش مشکلی بوجود امده است')
+                    }
+                },
+                error: function() {
+                    element.prop('checked', elementValue);
+                    errorToast('ارتباط برقرار نشد')
+                }
+            });
+
+            function showToast(message, bgColor) {
+                var toastTag =
+                    '<section class="toast" data-delay="5000">\n' +
+                    '<section class="toast-body py-3 d-flex ' + bgColor + ' text-white">\n' +
+                    '<strong class="ml-auto">' + message + '</strong>\n' +
+                    '<button type="button" class="mr-2 close" data-dismiss="toast" aria-label="Close">\n' +
+                    '<span aria-hidden="true">&times;</span>\n' +
+                    '</button>\n' +
+                    '</section>\n' +
+                    '</section>';
+
+                $('.toast-wrapper').append(toastTag);
+                $('.toast').toast('show').delay(2000).queue(function() {
+                    $(this).remove();
+                });
+            }
+
+            function successToast_Active(message) {
+                showToast(message, 'bg-success');
+            }
+
+            function successToast_Deactive(message) {
+                showToast(message, 'bg-info');
+            }
+
+
+
+
+            function errorToast(message) {
+
+                var errorToastTag = '<section class="toast" data-delay="5000">\n' +
+                    '<section class="toast-body py-3 d-flex bg-danger text-white">\n' +
+                    '<strong class="ml-auto">' + message + '</strong>\n' +
+                    '<button type="button" class="mr-2 close" data-dismiss="toast" aria-label="Close">\n' +
+                    '<span aria-hidden="true">&times;</span>\n' +
+                    '</button>\n' +
+                    '</section>\n' +
+                    '</section>';
+
+                $('.toast-wrapper').append(errorToastTag);
+                $('.toast').toast('show').delay(2000).queue(function() {
+                    $(this).remove();
+                })
+            }
+        }
+    </script>
+
+
+@include('admin.alerts.sweetalert.delete-confirm',['className'=>'delete'])
+
 @endsection
