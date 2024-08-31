@@ -16,6 +16,8 @@
                 buttonsStyling: false
             });
 
+            
+
             swalWithBootstrapButtons.fire({
                      title: 'آیا از حذف کردن داده مطمن هستید؟',
                         text: "شما میتوانید درخواست خود را لغو نمایید",
@@ -46,4 +48,3 @@
 
 
 </script>
- 
