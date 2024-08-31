@@ -57,6 +57,7 @@
                                             height="50px"></td>
                                     <td>{{ $postcategory->tags }}</td>
                                     <td>
+                                
                                         <label for="{{ $postcategory->id }}"> <input id="{{ $postcategory->id }}"
                                                 onchange="changeStatus({{ $postcategory->id }})"
                                                 data-url="{{ route('admin.content.category.status', $postcategory->id) }}"
