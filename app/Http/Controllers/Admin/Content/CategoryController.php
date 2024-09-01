@@ -48,7 +48,7 @@ class CategoryController extends Controller
         $inputs = collect($inputs)->except('_token')->toArray();
 
         // Modify or add any additional fields you need
-        $inputs['slug'] = str_replace(' ', '-', $inputs['name']) . '-' . Str::random(5);
+       // $inputs['slug'] = str_replace(' ', '-', $inputs['name']) . '-' . Str::random(5);
         $inputs['image'] = 'image';
 
         // Create the PostCategory instance
