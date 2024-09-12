@@ -261,7 +261,7 @@ button {
 }
 
 .sidebar-dropdown a::before,
-button::before {
+.mybutton::before {
     content: '»';
     margin: .8rem;
 }

@@ -53,11 +53,11 @@
                                     <td>{{ $postcategory->name }}</td>
                                     <td>{{ $postcategory->description }}</td>
                                     <td>{{ $postcategory->slug }}</td>
-                                    <td><img src="{{ asset($postcategory->image) }}" alt="" width="50px"
+                                    <td><img src="{{ asset($postcategory->image['indexArray'][$postcategory->image['currentImage']]) }}" alt="" width="50px"
                                             height="50px"></td>
                                     <td>{{ $postcategory->tags }}</td>
                                     <td>
-                                
+
                                         <label for="{{ $postcategory->id }}"> <input id="{{ $postcategory->id }}"
                                                 onchange="changeStatus({{ $postcategory->id }})"
                                                 data-url="{{ route('admin.content.category.status', $postcategory->id) }}"

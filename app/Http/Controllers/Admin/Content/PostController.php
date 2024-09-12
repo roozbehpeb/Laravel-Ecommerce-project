@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\admin\content;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Cviebrock\EloquentSluggable\Tests\Models\Post;
 
 class PostController extends Controller
 {
