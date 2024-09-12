@@ -108,27 +108,47 @@
                                 </span>
                             </section>
 
-                            <section class="col-12 col-md-6 my-2">
-                                <div class="form-group">
-                                    <label for="">توضیحات</label>
-                                    <textarea name="description" id="description" class="form-control form-control-sm" rows="6">{{ old('description', $PostCategory->description) }}</textarea>
-                                    <span class=" p-1 my-2">
-                                        @error('description')
-                                            <span class="alert_required bg-danger text-white  rounded " role="alert">
+                            <section class="row flex-row-reverse ">
+                                <section class="col-12 col-md-6 my-2 d-flex">
+                                    @php
+                                        $number = 1;
+                                        @endphp
+                                    @foreach ($PostCategory->image['indexArray'] as $key => $value )
+                                    <section class="col-md-{{ 6 / $number }} ">
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" name="currentImage" value="{{ $key }}" id="{{ $number }}" @if($PostCategory->image['currentImage'] == $key) checked @endif>
+                                            <label for="{{ $number }}" class="form-check-label mx-2">
+                                                <img src="{{ asset($value) }}" class="w-100" alt="">
+                                            </label>
+                                        </div>
+                                    </section>
+                                    @php
+                                    $number++;
+                                @endphp
+                                    @endforeach
+                                </section>
+                                <section class="col-12 col-md-6 my-2">
+                                    <div class="form-group">
+                                        <label for="">توضیحات</label>
+                                        <textarea name="description" id="description" class="form-control form-control-sm" rows="6">{{ old('description', $PostCategory->description) }}</textarea>
+                                        <span class=" p-1 my-2">
+                                            @error('description')
+                                                <span class="alert_required bg-danger text-white  rounded " role="alert">
 
-                                                {{ $message }}
+                                                    {{ $message }}
 
-                                            </span>
-                                        @enderror
-                                    </span>
-                                </div>
-                                </sectio <section class="col-12">
-                                <button class="btn btn-primary btn-sm">ثبت</button>
+                                                </span>
+                                            @enderror
+                                        </span>
+                                    </div>
+                                    </sectio <section class="col-12">
+                                    <button class="btn btn-primary button-primary btn-lg  p-2">ثبت</button>
+                                </section>
                             </section>
-                        </section>
-                    </form>
-                </section>
+                        </form>
+                    </section>
 
+                            </section>
             </section>
         </section>
     </section>
