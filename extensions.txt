@@ -1,0 +1,12 @@
+damms005.devdb
+devsense.composer-php-vscode
+donjayamanne.githistory
+donjayamanne.jquerysnippets
+editorconfig.editorconfig
+emmanuelbeziat.vscode-great-icons
+github.copilot
+github.copilot-chat
+kainiklas.composer-intellisense
+rifi2k.format-html-in-php
+ryannaddy.laravel-artisan
+zignd.html-css-class-completion

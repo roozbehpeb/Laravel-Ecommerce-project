@@ -16,7 +16,7 @@
                 buttonsStyling: false
             });
 
-            
+
 
             swalWithBootstrapButtons.fire({
                      title: 'آیا از حذف کردن داده مطمن هستید؟',
@@ -31,14 +31,14 @@
                             if(result.value == true){
                                 $(this).parent().submit();
                             }
-                            else if(result.dismiss === Swal.DismissReason.cancel){
-                                swalWithBootstrapButtons.fire({
-                                         title: 'لغو درخواست',
-                                         text: "درخواست شما لغو شد",
-                                        icon: 'error',
-                                       confirmButtonText: 'باشه.'
-                                })
-                            }
+                            // else if(result.dismiss === Swal.DismissReason.cancel){
+                            //     swalWithBootstrapButtons.fire({
+                            //              title: 'لغو درخواست',
+                            //              text: "درخواست شما لغو شد",
+                            //             icon: 'error',
+                            //            confirmButtonText: 'باشه.'
+                            //     })
+                            // }
 
                         })
 

@@ -41,21 +41,30 @@
                             <th>دسته تیکت</th>
                             <th>اولویت تیکت</th>
                             <th>ارجاع شده از</th>
+                            <th>تیکت مرجع</th>
                             <th class="max-width-16-rem text-center"><i class="fa fa-cogs"></i> تنظیمات</th>
                         </tr>
                     </thead>
                     <tbody>
+
+                        @foreach ($tickets as $ticket)
+
                         <tr>
-                            <th>1</th>
-                            <td>حامد احمدی	</td>
-                            <td>پرداخت انجام نمیشه!	</td>
-                            <td>دسته فروش	</td>
-                            <td>فوری</td>
-                            <td>-</td>
+                            <th>{{ $loop->iteration }}</th>
+                            <td>{{ $ticket->user->first_name . ' ' . $ticket->user->last_name }}</td>
+                            <td>{{ $ticket->subject }}</td>
+                            <td>{{ $ticket->category->name }}</td>
+                            <td>{{ $ticket->priority->name }}</td>
+                            <td>{{ $ticket->admin ? $ticket->admin->user->first_name . ' ' . $ticket->admin->user->last_name : '-' }}</td>
+                            <td>{{ $ticket->parent->subject ?? '-' }}</td>
                             <td class="width-16-rem text-left">
-                                <a href="{{ route('admin.ticket.show') }}" class="btn btn-info btn-sm"><i class="fa fa-eye"></i> مشاهده</a>
+                                <a href="{{ route('admin.ticket.show', $ticket->id) }}" class="btn btn-info btn-sm"><i class="fa fa-eye"></i> مشاهده</a>
+                                <a href="{{ route('admin.ticket.change', $ticket->id) }}" class="btn btn-warning btn-sm"><i class="fa fa-check"></i> {{ $ticket->status == 1 ? 'باز کردن' : 'بستن' }}</a>
                             </td>
                         </tr>
+
+                        @endforeach 
+
 
                     </tbody>
                 </table>
@@ -64,5 +73,89 @@
         </section>
     </section>
 </section>
+
+@endsection
+
+
+
+@section('script')
+    <script type="text/javascript">
+        function changeStatus(id) {
+            var element = $("#" + id)
+            var url = element.attr('data-url')
+            var elementValue = !element.prop('checked');
+
+            $.ajax({
+                url: url,
+                type: "GET",
+                success: function(response) {
+                    if (response.status) {
+                        if (response.checked) {
+                            element.prop('checked', true);
+                            successToast_Active('وضعیت دسته بندی تیکت ها با موفقیت فعال شد')
+                        } else {
+                            element.prop('checked', false);
+                            successToast_Deactive('وضعیت دسته بندی تیکت ها غیر فعال شد')
+                        }
+                    } else {
+                        element.prop('checked', elementValue);
+                        errorToast('هنگام ویرایش مشکلی بوجود امده است')
+                    }
+                },
+                error: function() {
+                    element.prop('checked', elementValue);
+                    errorToast('ارتباط برقرار نشد')
+                }
+            });
+
+            function showToast(message, bgColor) {
+                var toastTag =
+                    '<section class="toast" data-delay="5000">\n' +
+                    '<section class="toast-body py-3 d-flex ' + bgColor + ' text-white">\n' +
+                    '<strong class="ml-auto">' + message + '</strong>\n' +
+                    '<button type="button" class="mr-2 close" data-dismiss="toast" aria-label="Close">\n' +
+                    '<span aria-hidden="true">&times;</span>\n' +
+                    '</button>\n' +
+                    '</section>\n' +
+                    '</section>';
+
+                $('.toast-wrapper').append(toastTag);
+                $('.toast').toast('show').delay(2000).queue(function() {
+                    $(this).remove();
+                });
+            }
+
+            function successToast_Active(message) {
+                showToast(message, 'bg-success');
+            }
+
+            function successToast_Deactive(message) {
+                showToast(message, 'bg-info');
+            }
+
+
+
+
+            function errorToast(message) {
+
+                var errorToastTag = '<section class="toast" data-delay="5000">\n' +
+                    '<section class="toast-body py-3 d-flex bg-danger text-white">\n' +
+                    '<strong class="ml-auto">' + message + '</strong>\n' +
+                    '<button type="button" class="mr-2 close" data-dismiss="toast" aria-label="Close">\n' +
+                    '<span aria-hidden="true">&times;</span>\n' +
+                    '</button>\n' +
+                    '</section>\n' +
+                    '</section>';
+
+                $('.toast-wrapper').append(errorToastTag);
+                $('.toast').toast('show').delay(2000).queue(function() {
+                    $(this).remove();
+                })
+            }
+        }
+
+
+    </script>
+@include('admin.alerts.sweetalert.delete-confirm',['className'=>'delete'])
 
 @endsection

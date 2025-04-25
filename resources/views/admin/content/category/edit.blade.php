@@ -29,7 +29,7 @@
                 </section>
 
                 <section>
-                    <form action="{{ route('admin.content.category.update', $PostCategory->id) }}" method="POST"
+                    <form action="{{ route('admin.content.category.update', $PostCategory->id) }}" method="post"
                         enctype="multipart/form-data" id="form">
                         @csrf
                         {{ method_field('put') }}
@@ -51,12 +51,10 @@
                                 </span>
 
                             </section>
-
-
                             <section class="col-12 col-md-3 my-2">
                                 <label for="tags">تگ ها</label>
                                 <input type="hidden" class="form-control form-control-sm" name="tags" id="tags"
-                                    value="{{ old('tags',$PostCategory->tags) }}">
+                                    value="{{ old('tags', $PostCategory->tags) }}">
 
                                 <select id="select_tags" class="slect2 form-control form-control-sm " multiple>
                                 </select>
@@ -79,7 +77,6 @@
                                         <option value="0" @if (old('status', $PostCategory->status) == 0) selected @endif>غیر فعال
                                         </option>
                                     </select>
-
                                 </div>
                                 <span class=" p-1">
                                     @error('status')
@@ -91,100 +88,103 @@
                                     @enderror
                                 </span>
                             </section>
-                            <section class="col-12 col-md-3 my-2">
+                            <section class="col-12 col-md-3 ">
                                 <div class="form-group">
                                     <label for="image">تصویر</label>
                                     <input type="file" class="form-control form-control-sm" name="image"
                                         id="image">
+                                    <img src="{{ asset($PostCategory->image['indexArray'][$PostCategory->image['currentImage']]) }}"
+                                        alt="" width="100" height="50" class="mt-3">
                                 </div>
                                 <span class="float-end p-1">
                                     @error('image')
                                         <span class="alert_required bg-danger text-white  rounded " role="alert">
-
                                             {{ $message }}
-
                                         </span>
                                     @enderror
                                 </span>
                             </section>
 
-                            <section class="row flex-row-reverse ">
-                                <section class="col-12 col-md-6 my-2 d-flex">
-                                    @php
-                                        $number = 1;
-                                        @endphp
-                                    @foreach ($PostCategory->image['indexArray'] as $key => $value )
-                                    <section class="col-md-{{ 6 / $number }} ">
-                                        <div class="form-check">
-                                            <input type="radio" class="form-check-input" name="currentImage" value="{{ $key }}" id="{{ $number }}" @if($PostCategory->image['currentImage'] == $key) checked @endif>
-                                            <label for="{{ $number }}" class="form-check-label mx-2">
-                                                <img src="{{ asset($value) }}" class="w-100" alt="">
-                                            </label>
-                                        </div>
-                                    </section>
-                                    @php
-                                    $number++;
-                                @endphp
-                                    @endforeach
-                                </section>
-                                <section class="col-12 col-md-6 my-2">
-                                    <div class="form-group">
-                                        <label for="">توضیحات</label>
-                                        <textarea name="description" id="description" class="form-control form-control-sm" rows="6">{{ old('description', $PostCategory->description) }}</textarea>
-                                        <span class=" p-1 my-2">
-                                            @error('description')
-                                                <span class="alert_required bg-danger text-white  rounded " role="alert">
+                            <section class="col-12 col-md-6 my-2 d-flex">
+                                <label for="commentable">سایز تصویر:</label>
+                                @php
+                                    $number = 1;
+                                    @endphp
+                                @foreach ($PostCategory->image['indexArray'] as $key => $value )
+                                <section class="col-md-{{ 6 / $number }} ">
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" name="currentImage" value="{{ $key }}" id="{{ $number }}" @if($PostCategory->image['currentImage'] == $key) checked @endif>
+                                        <label for="{{ $number }}" class="form-check-label mx-2">
+                                            <img src="{{ asset($value) }}" class="w-100" alt="">
+                                        </label>
 
-                                                    {{ $message }}
-
-                                                </span>
-                                            @enderror
-                                        </span>
                                     </div>
-                                    </sectio <section class="col-12">
-                                    <button class="btn btn-primary button-primary btn-lg  p-2">ثبت</button>
                                 </section>
+                                @php
+                                $number++;
+                            @endphp
+                                @endforeach
                             </section>
-                        </form>
-                    </section>
+                        </section>
 
+
+
+                            <section class="col-12 col-md-6 my-2">
+                                <div class="form-group">
+                                    <label for="">توضیحات</label>
+                                    <textarea name="description" id="description" class="form-control form-control-sm" rows="6">{{ old('description', $PostCategory->description) }}</textarea>
+                                    <span class=" p-1 my-2">
+                                        @error('description')
+                                            <span class="alert_required bg-danger text-white  rounded " role="alert">
+
+                                                {{ $message }}
+
+                                            </span>
+                                        @enderror
+                                    </span>
+                                </div>
+                                </sectio <section class="col-12">
+                                <button class="btn btn-primary button-primary btn-lg  p-2">ثبت</button>
                             </section>
+                        </section>
+                    </form>
+                </section>
             </section>
         </section>
     </section>
+    </section>
 @endsection
+
 @section('script')
     <script src="{{ asset('admin-assets/ckeditor/ckeditor.js') }}"></script>
     <script>
         CKEDITOR.replace('description');
     </script>
+    <script>
+        $(document).ready(function() {
+            var tags_input = $('#tags');
+            var select_tags = $('#select_tags');
+            var default_tags = tags_input.val();
+            var default_data = null;
 
-<script>
-    $(document).ready(function () {
-        var tags_input = $('#tags');
-        var select_tags = $('#select_tags');
-        var default_tags = tags_input.val();
-        var default_data = null;
-
-        if(tags_input.val() !== null && tags_input.val().length > 0)
-        {
-            default_data = default_tags.split(',');
-        }
-
-        select_tags.select2({
-            placeholder : 'لطفا تگ های خود را وارد نمایید',
-            tags: true,
-            data: default_data
-        });
-        select_tags.children('option').attr('selected', true).trigger('change');
-
-
-        $('#form').submit(function ( event ){
-            if(select_tags.val() !== null && select_tags.val().length > 0){
-                var selectedSource = select_tags.val().join(',');
-                tags_input.val(selectedSource)
+            if (tags_input.val() !== null && tags_input.val().length > 0) {
+                default_data = default_tags.split(',');
             }
+
+            select_tags.select2({
+                placeholder: 'لطفا تگ های خود را وارد نمایید',
+                tags: true,
+                data: default_data
+            });
+            select_tags.children('option').attr('selected', true).trigger('change');
+
+
+            $('#form').submit(function(event) {
+                if (select_tags.val() !== null && select_tags.val().length > 0) {
+                    var selectedSource = select_tags.val().join(',');
+                    tags_input.val(selectedSource)
+                }
+            })
         })
-    })
-</script>
+    </script>
 @endsection

@@ -173,6 +173,16 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'password' => [
+            'required' => 'The password field is required.',
+            'min' => 'The password must be at least 8 characters.',
+            'letters' => 'The password must contain at least one letter.',
+            'mixed' => 'The password must contain both uppercase and lowercase letters.',
+            'numbers' => 'The password must contain at least one number.',
+            'symbols' => 'The password must contain at least one special character.',
+            'uncompromised' => 'The password has been compromised in a data breach.',
+            'confirmed' => 'The password confirmation does not match.',
+        ],
     ],
 
     /*

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Http\Controllers\Admin\Content;
+namespace App\Http\Controllers\admin\content;
 
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -10,12 +10,7 @@ use App\Models\Content\PostCategory;
 use App\Http\Services\Image\ImageService;
 use App\Http\Requests\Admin\Content\PostCategoryRequest;
 use App\Http\Services\Image\ImageCacheService;
-
-
-
-//use App\Http\Services\Image\ImageService;
-//use App\Http\Services\Image\ImageCacheService;
-
+use Cviebrock\EloquentSluggable\Tests\Models\Post as PostSluggable;
 
 
 class CategoryController extends Controller
@@ -52,33 +47,10 @@ class CategoryController extends Controller
     public function store(PostCategoryRequest $request, ImageService $imageService)
 
     {
-
-
-
-        // Get all inputs from the request
-        // $inputs = $request->all();
-
-        // Remove '_token' from the inputs array
-        //$inputs = collect($inputs)->except('_token')->toArray();
-
-
-
-        // Create the PostCategory instance
-        //  $postCategory = PostCategory::create($inputs);
-
-        //Redirect to the appropriate route after creation
-        //return redirect()->route('admin.content.category.index')->with('swal-success', 'دسته بندی جدید شما با موفقیت ثبت شد')->with('toast-success', 'دسته بندی جدید با موفقیت ثبت شد')->with('alert-section-success', 'دسته بندی جدید با موفقیت ثبت شد');
-
-        // return redirect()->route('admin.content.category.index')->with('toast-success', 'دسته بندی جدید با موفقیت ثبت شد');
-
-
-
         $inputs = $request->all();
         // Remove '_token' from the inputs array
-        $inputs = collect($inputs)->except('_token')->toArray();
+        //  $inputs = collect($inputs)->except('_token')->toArray();
         if ($request->hasFile('image')) {
-
-
             $imageService->setExclusiveDirectory('images' . DIRECTORY_SEPARATOR . 'post-category');
             // $result = $imageService->save($request->file('image'));
             // $result = $imageService->fitAndSave($request->file('image'), 600, 150);
@@ -113,7 +85,7 @@ class CategoryController extends Controller
      */
     public function edit(PostCategory $PostCategory)
     {
-        return view('admin.content.category.edit', compact('PostCategory'));
+       return view('admin.content.category.edit', compact('PostCategory'));
     }
 
     /**
@@ -123,33 +95,35 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
     public function update(PostCategoryRequest $request, PostCategory $PostCategory, ImageService $imageService)
     {
         $inputs = $request->all();
+        //date fixed
+        $realTimestampStart = substr($request->published_at, 0, 10);
+        $inputs['published_at'] = date("Y-m-d H:i:s", (int)$realTimestampStart);
 
-        if($request->hasFile('image'))
-        {
-            if(!empty($postCategory->image))
-            {
+        if ($request->hasFile('image')) {
+            if (!empty($PostCategory->image)) {
                 $imageService->deleteDirectoryAndFiles($PostCategory->image['directory']);
             }
             $imageService->setExclusiveDirectory('images' . DIRECTORY_SEPARATOR . 'post-category');
             $result = $imageService->createIndexAndSave($request->file('image'));
-            if($result === false)
-            {
-                return redirect()->route('admin.content.category.index')->with('swal-error', 'آپلود تصویر با خطا مواجه شد');
+            if ($result === false) {
+                return redirect()->route('admin.content.post.index')->with('swal-error', 'آپلود تصویر با خطا مواجه شد');
             }
             $inputs['image'] = $result;
-        }
-        else{
-            if(isset($inputs['currentImage']) && !empty($postCategory->image))
-            {
+        } else {
+            if (isset($inputs['currentImage']) && !empty($PostCategory->image)) {
                 $image = $PostCategory->image;
                 $image['currentImage'] = $inputs['currentImage'];
                 $inputs['image'] = $image;
             }
         }
+
+
         $PostCategory->update($inputs);
+
         return redirect()->route('admin.content.category.index')->with('swal-success', 'دسته بندی شما با موفقیت ویرایش شد');
     }
 
@@ -165,10 +139,6 @@ class CategoryController extends Controller
         $result = $PostCategory->delete();
         return redirect()->route('admin.content.category.index')->with('swal-success', 'دسته بندی شما با موفقیت حذف شد');
     }
-
-
-
-
 
 
     public function status(PostCategory $PostCategory)

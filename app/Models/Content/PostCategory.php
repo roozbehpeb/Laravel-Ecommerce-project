@@ -19,9 +19,11 @@ class PostCategory extends Model
         ];
     }
 
+
     protected $casts = ['image' => 'array'];
+    
+    protected $fillable = ['name', 'description', 'slug', 'image', 'status', 'tags'];
 
 
-    protected $fillable = ['name', 'description', 'slug', 'image', 'tags', 'status'];
 
 }
